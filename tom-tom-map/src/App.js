@@ -14,12 +14,12 @@ const App = () => {
   const [latitude, setLatitude] = useState(44.787197)
 
   const convertToPoints = (lngLat) => {
- return {
-   point: {
-     latitude: lngLat.lat,
-     longitude: lngLat.lng
-   }
- }
+    return {
+      point: {
+        latitude: lngLat.lat,
+        longitude: lngLat.lng
+      }
+    }
   }
 
 
@@ -38,19 +38,19 @@ const App = () => {
       paint: {
         'line-color': '#4a90e2',
         'line-width': 6
-  
+
       }
     })
   }
 
   const addDeliveryMarker = (lngLat, map) => {
     const element = document.createElement('div')
-    element.className= 'marker-delivery'
+    element.className = 'marker-delivery'
     new tt.Marker({
       element: element
     })
-    .setLngLat(lngLat)
-    .addTo(map)
+      .setLngLat(lngLat)
+      .addTo(map)
 
   }
 
@@ -80,7 +80,7 @@ const App = () => {
       const popupOffset = {
         bottom: [0, -25]
       }
-      const popup = new tt.Popup ({offset: popupOffset }).setHTML('This is you!')
+      const popup = new tt.Popup({ offset: popupOffset }).setHTML('This is you!')
       const element = document.createElement('div')
       element.className = 'marker'
 
@@ -91,13 +91,13 @@ const App = () => {
         .setLngLat([longitude, latitude])
         .addTo(map)
 
-        marker.on('dragend', ()=> {
-          const lngLat = marker.getLngLat()
-          setLongitude(lngLat.lng)
-          setLatitude(lngLat.lat)
-        })
+      marker.on('dragend', () => {
+        const lngLat = marker.getLngLat()
+        setLongitude(lngLat.lng)
+        setLatitude(lngLat.lat)
+      })
 
-        marker.setPopup(popup).togglePopup()
+      marker.setPopup(popup).togglePopup()
     }
     addMarker()
 
@@ -111,25 +111,25 @@ const App = () => {
         origins: [convertToPoints(origin)],
       }
 
-    return new Promise((resolve, reject) => {
-      ttapi.services
-        .matrixRouting(callParameters)
-        .then((matrixAPIResults) => {
-          const results = matrixAPIResults.matrix[0]
-          const resultsArray = results.map((result, index) => {
-            return {
-              location: locations[index],
-              drivingtime: result.response.routeSummary.travelTimeInSeconds,
-            }
+      return new Promise((resolve, reject) => {
+        ttapi.services
+          .matrixRouting(callParameters)
+          .then((matrixAPIResults) => {
+            const results = matrixAPIResults.matrix[0]
+            const resultsArray = results.map((result, index) => {
+              return {
+                location: locations[index],
+                drivingtime: result.response.routeSummary.travelTimeInSeconds,
+              }
+            })
+            resultsArray.sort((a, b) => {
+              return a.drivingtime - b.drivingtime
+            })
+            const sortedLocations = resultsArray.map((result) => {
+              return result.location
+            })
+            resolve(sortedLocations)
           })
-          resultsArray.sort((a, b) => {
-            return a.drivingtime - b.drivingtime
-          })
-          const sortedLocations = resultsArray.map((result) => {
-            return result.location
-          })
-          resolve(sortedLocations)
-        })
       })
     }
 
@@ -145,7 +145,7 @@ const App = () => {
           .then((routeData) => {
             const geoJson = routeData.toGeoJson()
             drawRoute(geoJson, map)
-        })
+          })
       })
     }
 
